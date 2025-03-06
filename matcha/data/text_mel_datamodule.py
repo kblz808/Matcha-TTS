@@ -250,8 +250,16 @@ class TextMelBatchCollate:
             y_, x_ = item["y"], item["x"]
             y_lengths.append(y_.shape[-1])
             x_lengths.append(x_.shape[-1])
-            y[i, :, : y_.shape[-1]] = y_
-            x[i, : x_.shape[-1]] = x_
+
+            num_batches_y_ = y_.shape[0]
+            for j in range(num_batches_y_):
+                if i + j < y.shape[0]:
+                    y[i + j, :, :y_.shape[-1]] = y_[j]
+                else:
+                    pass
+            # y[i, :, : y_.shape[-1]] = y_
+            # x[i, : x_.shape[-1]] = x_
+            
             spks.append(item["spk"])
             filepaths.append(item["filepath"])
             x_texts.append(item["x_text"])
